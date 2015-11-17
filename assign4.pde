@@ -102,25 +102,43 @@ void draw() {
    //straight
    if(straightMode){
      for(int n=0; n<5; n++){
-   //  boolean[]destroyed = new boolean[5];
-   //  destroyed[n]=false;
      int[]X = new int[5];
      X[n]=(n*70-340);
-     image(enemy, enX+X[n],enY);
-      //crash
-    //   if(destroyed[n]){image(enemy,2000,enY);}
-     //  else{image(enemy, enX+X[n], enY);}
-       if(enY+60>=ftY && ftY>=enY-50){
-        if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
-          hps-=2*199/10;
-          image(enemy, enX+X[n],enY);
-          X[n]=2000;
-     //     destroyed[n]=true;
+
+      if(enY+60>=ftY && ftY>=enY-50){
+      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+        X[n]=2000;
+        image(enemy, enX+X[n],enY);
+        hps-=2*199/10;
         }
        }
-
+          image(enemy, enX+X[n],enY);
      }
 
+    /*for(int n=0; n<5; n++){
+
+     boolean[]showing = new boolean[5];
+     showing[n] = true;
+
+     int[]X = new int[5];
+     X[n]=(n*70-340);
+
+
+ //crash
+       if(showing[n]){
+
+        if(enY+60>=ftY && ftY>=enY-50){
+        if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+
+          showing[n]=false;
+          image(enemy, X[n], enY);
+          
+                    hps-=2*199/10;
+        }
+        }
+       }
+            if(showing[n]){image(enemy, enX+X[n], enY);}
+   }*/
    }
    
    
