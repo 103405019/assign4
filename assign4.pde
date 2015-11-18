@@ -4,7 +4,7 @@ float speed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
 final int START=0, PLAYING=1, END=2;
-int gameState;
+int gameState, currentFrame;
 boolean[]showing = new boolean[8];
 PImage[]flames = new PImage[5];
 boolean[]explode = new boolean[5];
@@ -28,8 +28,10 @@ void setup () {
   gameState=START;
     for(int n=0; n<5; n++){
    showing[n] = true;
-   flames[n] = loadImage("img/flame"+(n+1)+".png");
 }
+currentFrame=0;
+for(int i=0; i<5; i++){
+   flames[i] = loadImage("img/flame"+(i+1)+".png");}
 }
 
 void draw() {
@@ -85,14 +87,6 @@ void draw() {
     if(enY+30<ftY+25){enY+=(speed-2);}
     else if(enY+30==ftY+25){enY=ftY;}} */
     
-   //explode
-   for(int n=0; n<5; n++){
-    if(explode[n]==true){
-    for(int i=0; i<5; i++){
-    image(flames[i], enX+X[n], enY);}
-   }
-   }
-    
    //enemies
    
    timer+=3;
@@ -135,6 +129,14 @@ void draw() {
         }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
+         //explode
+    if(explode[n]){
+      if(frameCount%(60/10)==0){
+    int i=(currentFrame++)%5;
+    image(flames[i], enX+X[n], enY);
+  }
+   }
+   
    }
    }
    
