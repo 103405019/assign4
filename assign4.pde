@@ -3,7 +3,7 @@ int bg, enX, enY, hps, trX, trY, ftX, ftY, timer;
 float speed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
-final int START=0, PLAYING=1, END=2, YES=0, NO=1;
+final int START=0, PLAYING=1, END=2;
 int gameState, enemyShow;
 boolean[]showing = new boolean[5];
 void setup () {
@@ -86,83 +86,58 @@ void draw() {
     enX=0;enY=floor(random(0,130));
     straightMode=false;
     tiltMode=true;
+    for(int n=0; n<5; n++){
+    showing[n]=true;}
    }
    if(timer==1962){
     enX=0;enY=floor(random(0,180));
     tiltMode=false;
     squareMode=true;
+    for(int n=0; n<5; n++){
+    showing[n]=true;}
    }
    if(timer==2901){
     enX=0;enY=floor(random(0,420));
     squareMode=false;
     straightMode=true;
     timer=0;
+    for(int n=0; n<5; n++){
+    showing[n]=true;}
    }
-   
+
    //straight
    if(straightMode){ 
-    
-   
-/*     for(int n=0; n<5; n++){
-       int[]X = new int[5];
-       int[]M = new int[5];
-        image(enemy, enX+X[n],enY);   
-      for(int m=0;m<1;m++){
-       
-      // int[]O = new int[5];
-         X[n]=(n*70-340);
-         
-         if(enY+60>=ftY && ftY>=enY-50){
-         if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
-         X[n]+=2000;  
-      
-         enX=enX+X[n];
-    
-        hps-=2*199/10;
-      }
-      }
-     }
-     }
-     */
-  //   image(enemy, enX+X[n],enY);    
-    // image(enemy, enX+X[n]+2000,enY);    
-     
-    // }
-   
-    
     for(int n=0; n<5; n++){
-
      int[]X = new int[5];
      X[n]=(n*70-340);
-
-       
- //crash
-           if(showing[n]){
-       // image(enemy, enX+X[n], enY);
-           if(enY+60>=ftY && ftY>=enY-50){
-           if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
-        // image(enemy, enX+X[n], enY);
-           showing[n]=false;
-           hps-=2*199/10;
+    //crash
+     if(showing[n]){
+      if(enY+60>=ftY && ftY>=enY-50){
+      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+        showing[n]=false;
+        hps-=2*199/10;
         }
-        }
-       
-       
+        }  
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
-              }
+    }
  }
-   
    
    //tilt
    if(tiltMode){
     for(int n=0; n<5; n++){
-     pushMatrix();
      int[]X = new int[5];
      X[n]=n*70-340;
-     translate(X[n],X[n]+340);
-      image(enemy, enX, enY);
-     popMatrix();
+    //crash
+     if(showing[n]){
+      if(enY+X[n]+340+60>=ftY && ftY>=enY+X[n]+340-50){
+      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+        showing[n]=false;
+        hps-=2*199/10;
+        }
+        }  
+     }
+  if(showing[n]==true){image(enemy, enX+X[n], enY+X[n]+340);}
 }
    }
      
