@@ -5,7 +5,7 @@ boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
 final int START=0, PLAYING=1, END=2, YES=0, NO=1;
 int gameState, enemyShow;
-
+boolean[]showing = new boolean[5];
 void setup () {
   size(640, 480) ;
   start1=loadImage("img/start1.png");
@@ -22,8 +22,10 @@ void setup () {
   bg=0;
   speed=0;
   gameState=START;
+    for(int n=0; n<5; n++){
+   showing[n] = true;
 }
-
+}
 void draw() {
  switch(gameState){
   case START:
@@ -96,50 +98,60 @@ void draw() {
     straightMode=true;
     timer=0;
    }
-
-
    
    //straight
-   if(straightMode){
-     for(int n=0; n<5; n++){
-     int[]X = new int[5];
-     X[n]=(n*70-340);
-
-      if(enY+60>=ftY && ftY>=enY-50){
-      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
-        X[n]=2000;
-        image(enemy, enX+X[n],enY);
+   if(straightMode){ 
+    
+   
+/*     for(int n=0; n<5; n++){
+       int[]X = new int[5];
+       int[]M = new int[5];
+        image(enemy, enX+X[n],enY);   
+      for(int m=0;m<1;m++){
+       
+      // int[]O = new int[5];
+         X[n]=(n*70-340);
+         
+         if(enY+60>=ftY && ftY>=enY-50){
+         if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+         X[n]+=2000;  
+      
+         enX=enX+X[n];
+    
         hps-=2*199/10;
-        }
-       }
-          image(enemy, enX+X[n],enY);
+      }
+      }
      }
-
-    /*for(int n=0; n<5; n++){
-
-     boolean[]showing = new boolean[5];
-     showing[n] = true;
+     }
+     */
+  //   image(enemy, enX+X[n],enY);    
+    // image(enemy, enX+X[n]+2000,enY);    
+     
+    // }
+   
+    
+    for(int n=0; n<5; n++){
 
      int[]X = new int[5];
      X[n]=(n*70-340);
 
-
+       
  //crash
-       if(showing[n]){
-
-        if(enY+60>=ftY && ftY>=enY-50){
-        if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
-
-          showing[n]=false;
-          image(enemy, X[n], enY);
-          
-                    hps-=2*199/10;
+           if(showing[n]){
+       // image(enemy, enX+X[n], enY);
+           if(enY+60>=ftY && ftY>=enY-50){
+           if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+        // image(enemy, enX+X[n], enY);
+           showing[n]=false;
+           hps-=2*199/10;
         }
         }
-       }
-            if(showing[n]){image(enemy, enX+X[n], enY);}
-   }*/
-   }
+       
+       
+     }
+      if(showing[n]==true){image(enemy, enX+X[n], enY);}
+              }
+ }
    
    
    //tilt
