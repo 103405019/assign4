@@ -4,8 +4,12 @@ float speed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
 final int START=0, PLAYING=1, END=2;
-int gameState, enemyShow;
-boolean[]showing = new boolean[5];
+int gameState;
+boolean[]showing = new boolean[8];
+PImage[]flames = new PImage[5];
+boolean[]explode = new boolean[5];
+boolean[]flameShow = new boolean[5];
+
 void setup () {
   size(640, 480) ;
   start1=loadImage("img/start1.png");
@@ -24,8 +28,10 @@ void setup () {
   gameState=START;
     for(int n=0; n<5; n++){
    showing[n] = true;
+   flames[n] = loadImage("img/flame"+(n+1)+".png");
 }
 }
+
 void draw() {
  switch(gameState){
   case START:
@@ -79,6 +85,14 @@ void draw() {
     if(enY+30<ftY+25){enY+=(speed-2);}
     else if(enY+30==ftY+25){enY=ftY;}} */
     
+   //explode
+   for(int n=0; n<5; n++){
+    if(explode[n]==true){
+    for(int i=0; i<5; i++){
+    image(flames[i], enX+X[n], enY);}
+   }
+   }
+    
    //enemies
    
    timer+=3;
@@ -93,10 +107,8 @@ void draw() {
     enX=0;enY=floor(random(0,180));
     tiltMode=false;
     squareMode=true;
-    for(int n=0; n<5; n++){
+    for(int n=0; n<8; n++){
     showing[n]=true;}
-    for(int m=0; m<5; m++){
-    showing[m]=true;}
    }
    if(timer==2901){
     enX=0;enY=floor(random(0,420));
@@ -108,7 +120,7 @@ void draw() {
    }
 
    //straight
-   if(straightMode){ 
+   if(straightMode){
     for(int n=0; n<5; n++){
      int[]X = new int[5];
      X[n]=(n*70-340);
@@ -117,13 +129,14 @@ void draw() {
       if(enY+60>=ftY && ftY>=enY-50){
       if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
         showing[n]=false;
+        explode[n]=true;
         hps-=2*199/10;
         }
-        }  
+        }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
-    }
- }
+   }
+   }
    
    //tilt
    if(tiltMode){
@@ -140,13 +153,13 @@ void draw() {
         }  
      }
   if(showing[n]==true){image(enemy, enX+X[n], enY+X[n]+340);}
-}
+   }
    }
      
    //square
    if(squareMode){
     for(int n=0; n<3; n++){
-     int[]X = new int[3];
+     int[]X = new int[8];
      X[n]=n*60-170;
      if(showing[n]){
       if(enY+X[n]+170+60>=ftY && ftY>=enY+X[n]+170-50){
@@ -159,27 +172,32 @@ void draw() {
      if(showing[n]==true){image(enemy, enX+X[n]-30, enY+X[n]+170);}
    }
    
-    for(int m=0; m<3; m++){
-     int[]X = new int[3];
-     X[m]=m*60-170;
-     if(showing[m]){
-      if(enY+X[m]+290+60>=ftY && ftY>=enY+X[m]+290-50){
-      if(enX+X[m]-120-30-50<=ftX && ftX<=enX+X[m]-120-30+60){
-        showing[m]=false;
+    for(int n=3; n<6; n++){
+     int[]X = new int[8];
+     X[n]=(n-3)*60-170;
+     if(showing[n]){
+      if(enY+X[n]+290+60>=ftY && ftY>=enY+X[n]+290-50){
+      if(enX+X[n]-120-30-50<=ftX && ftX<=enX+X[n]-120-30+60){
+        showing[n]=false;
         hps-=2*199/10;
         }
         }
      }
-     if(showing[m]==true){image(enemy, enX+X[m]-120-30, enY+X[m]+290);}
-   }     
+     if(showing[n]==true){image(enemy, enX+X[n]-120-30, enY+X[n]+290);}
+   }   
    
-    for(int n=0; n<3; n++){
-     pushMatrix();
-     int[]X = new int[3];
-     X[n]=n*60-170;
-     translate(X[n]-60,X[n]+230);
-       image(enemy, enX-30, enY);
-     popMatrix();
+    for(int n=6; n<8; n++){
+     int[]X = new int[8];
+     X[n]=(n-6)*120-170;
+     if(showing[n]){
+      if(enY+X[n]+230+60>=ftY && ftY>=enY+X[n]+230-50){
+      if(enX+X[n]-60-30-50<=ftX && ftX<=enX+X[n]-60-30+60){
+        showing[n]=false;
+        hps-=2*199/10;
+        }
+        }
+     }
+     if(showing[n]==true){image(enemy, enX+X[n]-60-30, enY+X[n]+230);}
     }
  }
         
