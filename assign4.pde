@@ -1,14 +1,14 @@
-PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
-int bg, enX, enY, hps, trX, trY, ftX, ftY, timer;
-float speed;
+PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2, shoot;
+int bg, enX, enY, hps, trX, trY, ftX, ftY, shX, shY, timer, timerExplode;
+float speed, shootingSpeed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
 final int START=0, PLAYING=1, END=2;
 int gameState, currentFrame;
 boolean[]showing = new boolean[8];
 PImage[]flames = new PImage[5];
-boolean[]explode = new boolean[5];
-boolean[]flameShow = new boolean[5];
+boolean[]explode = new boolean[8];
+boolean[]shooting = new boolean[5];
 
 void setup () {
   size(640, 480) ;
@@ -22,6 +22,7 @@ void setup () {
   treasure=loadImage("img/treasure.png");
   end1=loadImage("img/end1.png");
   end2=loadImage("img/end2.png");
+  shoot=loadImage("img/shoot.png");
   
   bg=0;
   speed=0;
@@ -29,7 +30,6 @@ void setup () {
     for(int n=0; n<5; n++){
    showing[n] = true;
 }
-currentFrame=0;
 for(int i=0; i<5; i++){
    flames[i] = loadImage("img/flame"+(i+1)+".png");}
 }
@@ -49,6 +49,7 @@ void draw() {
    enY=floor(random(45,430));
    enX=0;
    hps=199*2/10;
+
   break;
  
   case PLAYING:
@@ -112,6 +113,8 @@ void draw() {
     for(int n=0; n<5; n++){
     showing[n]=true;}
    }
+   
+int i=(currentFrame++)/6%5;
 
    //straight
    if(straightMode){
@@ -124,21 +127,22 @@ void draw() {
       if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
         showing[n]=false;
         explode[n]=true;
+        currentFrame=0;
         hps-=2*199/10;
         }
         }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
-         //explode
+
+//explode
     if(explode[n]){
-      if(frameCount%(60/10)==0){
-    int i=(currentFrame++)%5;
-    image(flames[i], enX+X[n], enY);
+       image(flames[i], enX+X[n], enY);       
+       if(frameCount%(60/10)==0){
+       timerExplode++;}
+   }
+   if(timerExplode==4){explode[n]=false;timerExplode=0;}
+    }
   }
-   }
-   
-   }
-   }
    
    //tilt
    if(tiltMode){
@@ -150,11 +154,20 @@ void draw() {
       if(enY+X[n]+340+60>=ftY && ftY>=enY+X[n]+340-50){
       if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
         showing[n]=false;
+        explode[n]=true;
+        currentFrame=0;
         hps-=2*199/10;
         }
         }  
      }
   if(showing[n]==true){image(enemy, enX+X[n], enY+X[n]+340);}
+  //explode
+    if(explode[n]){
+       image(flames[i], enX+X[n], enY+X[n]+340);       
+       if(frameCount%(60/10)==0){
+       timerExplode++;}
+   }
+   if(timerExplode==4){explode[n]=false;timerExplode=0;}
    }
    }
      
@@ -167,11 +180,20 @@ void draw() {
       if(enY+X[n]+170+60>=ftY && ftY>=enY+X[n]+170-50){
       if(enX+X[n]-30-50<=ftX && ftX<=enX+X[n]-30+60){
         showing[n]=false;
+        explode[n]=true;
+        currentFrame=0;
         hps-=2*199/10;
         }
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-30, enY+X[n]+170);}
+       //explode
+    if(explode[n]){
+       image(flames[i], enX+X[n]-30, enY+X[n]+170);       
+       if(frameCount%(60/10)==0){
+       timerExplode++;}
+   }
+   if(timerExplode==4){explode[n]=false;timerExplode=0;}
    }
    
     for(int n=3; n<6; n++){
@@ -181,11 +203,20 @@ void draw() {
       if(enY+X[n]+290+60>=ftY && ftY>=enY+X[n]+290-50){
       if(enX+X[n]-120-30-50<=ftX && ftX<=enX+X[n]-120-30+60){
         showing[n]=false;
+        explode[n]=true;
+        currentFrame=0;
         hps-=2*199/10;
         }
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-120-30, enY+X[n]+290);}
+            //explode
+    if(explode[n]){
+       image(flames[i], enX+X[n]-120-30, enY+X[n]+290);       
+       if(frameCount%(60/10)==0){
+       timerExplode++;}
+   }
+   if(timerExplode==4){explode[n]=false;timerExplode=0;}
    }   
    
     for(int n=6; n<8; n++){
@@ -195,11 +226,20 @@ void draw() {
       if(enY+X[n]+230+60>=ftY && ftY>=enY+X[n]+230-50){
       if(enX+X[n]-60-30-50<=ftX && ftX<=enX+X[n]-60-30+60){
         showing[n]=false;
+        explode[n]=true;
+        currentFrame=0;
         hps-=2*199/10;
         }
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-60-30, enY+X[n]+230);}
+            //explode
+    if(explode[n]){
+       image(flames[i], enX+X[n]-60-30, enY+X[n]+230);       
+       if(frameCount%(60/10)==0){
+       timerExplode++;}
+   }
+   if(timerExplode==4){explode[n]=false;timerExplode=0;}
     }
  }
         
@@ -224,6 +264,20 @@ void draw() {
     if(downPressed){ftY+=speed;} 
     if(leftPressed){ftX-=speed;}
     if(rightPressed){ftX+=speed;}
+    
+   //shoot
+  for(int c=0; c<5; c++){
+   if(keyPressed){
+     if(key==' '){shooting[c]=true;}
+   }
+   if(shooting[c]){
+     shootingSpeed++;
+     shX=ftX;
+     shY=ftY;
+     image(shoot,shX-shootingSpeed,shY);
+   }
+   
+   }
     
   //boundary
     if(ftX>width-50){ftX=width-50;}
