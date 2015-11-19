@@ -1,14 +1,15 @@
-PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2, shoot;
+PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 int bg, enX, enY, hps, trX, trY, ftX, ftY, shX, shY, timer, timerExplode;
 float speed, shootingSpeed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
-boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false;
+boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false, shooting=false;
 final int START=0, PLAYING=1, END=2;
 int gameState, currentFrame;
 boolean[]showing = new boolean[8];
 PImage[]flames = new PImage[5];
+PImage[]shoot = new PImage[5];
 boolean[]explode = new boolean[8];
-boolean[]shooting = new boolean[5];
+//boolean[]shooting = new boolean[5];
 
 void setup () {
   size(640, 480) ;
@@ -22,16 +23,13 @@ void setup () {
   treasure=loadImage("img/treasure.png");
   end1=loadImage("img/end1.png");
   end2=loadImage("img/end2.png");
-  shoot=loadImage("img/shoot.png");
   
   bg=0;
   speed=0;
   gameState=START;
-    for(int n=0; n<5; n++){
-   showing[n] = true;
-}
-for(int i=0; i<5; i++){
-   flames[i] = loadImage("img/flame"+(i+1)+".png");}
+  for(int n=0; n<5; n++){showing[n] = true;}
+  for(int i=0; i<5; i++){flames[i] = loadImage("img/flame"+(i+1)+".png");}
+  for(int c=0; c<5; c++){shoot[c]= loadImage("img/shoot.png");}
 }
 
 void draw() {
@@ -266,18 +264,16 @@ int i=(currentFrame++)/6%5;
     if(rightPressed){ftX+=speed;}
     
    //shoot
-  for(int c=0; c<5; c++){
-   if(keyPressed){
-     if(key==' '){shooting[c]=true;}
-   }
-   if(shooting[c]){
+    for(int c=0; c<5; c++){
+    if(shooting){
      shootingSpeed++;
      shX=ftX;
-     shY=ftY;
-     image(shoot,shX-shootingSpeed,shY);
+     shY=ftY+10;
+     image(shoot[c],shX-shootingSpeed,shY);
+     //if(shX-shootingSpeed<=-30){}
    }
-   
-   }
+  }
+
     
   //boundary
     if(ftX>width-50){ftX=width-50;}
@@ -323,8 +319,19 @@ void keyPressed(){
     rightPressed = true;
     break;
   }
+ // if(keyCode==ENTER){
+//shooting=true;
+//}
   }
-}
+  //shoot
+  for(int c=0; c<5; c++){
+        if(key==' '){
+     shooting=true;
+  println(c);}
+  }
+    }
+ // }
+   
 
 void keyReleased(){
   if(key==CODED){
@@ -343,4 +350,5 @@ void keyReleased(){
     break; 
   }
   }
+
 }
