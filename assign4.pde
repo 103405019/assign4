@@ -2,14 +2,14 @@ PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 int bg, enX, enY, hps, trX, trY, ftX, ftY, shX, shY, timer, timerExplode;
 float speed, shootingSpeed;
 boolean straightMode=true, tiltMode=false, squareMode=false;
-boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false, shooting=false;
+boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false; //shooting=false;
 final int START=0, PLAYING=1, END=2;
 int gameState, currentFrame;
 boolean[]showing = new boolean[8];
 PImage[]flames = new PImage[5];
 PImage[]shoot = new PImage[5];
 boolean[]explode = new boolean[8];
-//boolean[]shooting = new boolean[5];
+boolean[]shooting = new boolean[5];
 
 void setup () {
   size(640, 480) ;
@@ -265,14 +265,14 @@ int i=(currentFrame++)/6%5;
     
    //shoot
     for(int c=0; c<5; c++){
-    if(shooting){
+    if(shooting[c]){
      shootingSpeed++;
      shX=ftX;
      shY=ftY+10;
      image(shoot[c],shX-shootingSpeed,shY);
    }
     if(shX-shootingSpeed<=-30){
-    shooting=false;
+    shooting[c]=false;
     shootingSpeed=0;}
   }
 
@@ -326,7 +326,7 @@ void keyPressed(){
   //shoot
   for(int c=0; c<5; c++){
         if(key==' '){
-     shooting=true;
+     shooting[c]=true;
 }
   }
     }
