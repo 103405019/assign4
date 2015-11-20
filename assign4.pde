@@ -10,7 +10,7 @@ PImage[]flames = new PImage[5];
 PImage[]shoot = new PImage[5];
 boolean[]explode = new boolean[8];
 boolean[]shooting = new boolean[5];
-
+int c=0;
 void setup () {
   size(640, 480) ;
   start1=loadImage("img/start1.png");
@@ -31,7 +31,6 @@ void setup () {
   for(int i=0; i<5; i++){flames[i] = loadImage("img/flame"+(i+1)+".png");}
   for(int c=0; c<5; c++){shoot[c]= loadImage("img/shoot.png");}
 }
-
 void draw() {
  switch(gameState){
   case START:
@@ -47,7 +46,6 @@ void draw() {
    enY=floor(random(45,430));
    enX=0;
    hps=199*2/10;
-
   break;
  
   case PLAYING:
@@ -57,7 +55,6 @@ void draw() {
    image(bg1,bg,0);
    image(bg2,bg-641,0);
    image(bg1,bg-1282,0);
-
   //treasure
    image(treasure, trX, trY);
    if(trY+50>=ftY && ftY>=trY-50){
@@ -85,8 +82,53 @@ void draw() {
     if(enY+30>ftY+25){enY-=(speed-2);}
     if(enY+30<ftY+25){enY+=(speed-2);}
     else if(enY+30==ftY+25){enY=ftY;}} */
-    
-   //enemies
+  
+//shoot
+
+    while (key==' ') {
+ //        c=0;
+ //   if(key=='d'){c++;}
+    if(key==' '){
+     shooting[c]=true;
+     //B
+//     for(int c=0; c<5; c++){ 
+     shootingSpeed++;
+     shX=ftX;
+     shY=ftY;
+   //  image(shoot[c],shX-shootingSpeed,shY);     
+     shootingSpeed=0;
+     //B
+//     }
+println(c);
+   //  if(c==4){c=0;
+   //  }
+    //  for(int c=0; c<5; c++){
+    //  shooting[c]=false;
+     // }
+       key='d';
+            c++;
+            if(c%5==0){c=0;}
+  
+}
+//here add }
+ }
+//======
+  if(shooting[c]){
+     shootingSpeed++;
+     shX=ftX;
+     shY=ftY+10;
+     image(shoot[c],shX-shootingSpeed,shY);
+   //    image(shoot[c],shX-shootingSpeed,shY-80);
+   }
+    if(shX-shootingSpeed<=-30){
+    shooting[c]=false;
+    shootingSpeed=0;}
+
+//======
+ 
+//end of shoot
+   
+//enemies
    
    timer+=3;
    if(timer==981){
@@ -111,9 +153,15 @@ void draw() {
     for(int n=0; n<5; n++){
     showing[n]=true;}
    }
+   //shoot
+    
+//key='d';  
+    
+   
+   //shoot
+   
    
 int i=(currentFrame++)/6%5;
-
    //straight
    if(straightMode){
     for(int n=0; n<5; n++){
@@ -131,7 +179,6 @@ int i=(currentFrame++)/6%5;
         }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
-
 //explode
     if(explode[n]){
        image(flames[i], enX+X[n], enY);       
@@ -264,18 +311,11 @@ int i=(currentFrame++)/6%5;
     if(rightPressed){ftX+=speed;}
     
    //shoot
-    for(int c=0; c<5; c++){
-    if(shooting[c]){
-     shootingSpeed++;
-     shX=ftX;
-     shY=ftY+10;
-     image(shoot[c],shX-shootingSpeed,shY);
-   }
-    if(shX-shootingSpeed<=-30){
-    shooting[c]=false;
-    shootingSpeed=0;}
-  }
-
+   
+//    for(int c=0; c<5; c++){
+ 
+  //}
+    
     
   //boundary
     if(ftX>width-50){ftX=width-50;}
@@ -292,8 +332,9 @@ int i=(currentFrame++)/6%5;
    if(hps<=0){
     hps=0;
     //gameState=END;
-  }
+    }
  break;
+ 
  
  case END:
   image(end2,0,0);
@@ -304,7 +345,6 @@ int i=(currentFrame++)/6%5;
  }
 }
 }
-
 void keyPressed(){
   if(key==CODED){
     switch(keyCode){
@@ -321,18 +361,12 @@ void keyPressed(){
     rightPressed = true;
     break;
   }
-
   }
   //shoot
-  for(int c=0; c<5; c++){
-        if(key==' '){
-     shooting[c]=true;
-}
+  
+    
   }
-    }
-
    
-
 void keyReleased(){
   if(key==CODED){
     switch(keyCode){
@@ -350,5 +384,4 @@ void keyReleased(){
     break; 
   }
   }
-
 }
