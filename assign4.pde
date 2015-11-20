@@ -1,6 +1,7 @@
 PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
-int bg, enX, enY, hps, trX, trY, ftX, ftY, shX, shY, timer, timerExplode;
+int bg, enX, enY, hps, trX, trY, ftX, ftY,  timer, timerExplode;
 float speed, shootingSpeed;
+float shX, shY;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false; //shooting=false;
 final int START=0, PLAYING=1, END=2;
@@ -10,6 +11,7 @@ PImage[]flames = new PImage[5];
 PImage[]shoot = new PImage[5];
 boolean[]explode = new boolean[8];
 boolean[]shooting = new boolean[5];
+float bullet[][] = new float[5][2];
 int c=0;
 void setup () {
   size(640, 480) ;
@@ -30,6 +32,7 @@ void setup () {
   for(int n=0; n<5; n++){showing[n] = true;}
   for(int i=0; i<5; i++){flames[i] = loadImage("img/flame"+(i+1)+".png");}
   for(int c=0; c<5; c++){shoot[c]= loadImage("img/shoot.png");}
+  for(int c=0; c<5; c++){shooting[c]= false;}
 }
 void draw() {
  switch(gameState){
@@ -84,46 +87,93 @@ void draw() {
     else if(enY+30==ftY+25){enY=ftY;}} */
   
 //shoot
-
+/*
     while (key==' ') {
- //        c=0;
- //   if(key=='d'){c++;}
+    
     if(key==' '){
-     shooting[c]=true;
-     //B
-//     for(int c=0; c<5; c++){ 
+     bullet[c][0]=ftX;
+     bullet[c][1]=ftY;
+      shooting[c]=true;
+     
      shootingSpeed++;
      shX=ftX;
      shY=ftY;
    //  image(shoot[c],shX-shootingSpeed,shY);     
      shootingSpeed=0;
-     //B
-//     }
+
 println(c);
-   //  if(c==4){c=0;
-   //  }
-    //  for(int c=0; c<5; c++){
-    //  shooting[c]=false;
-     // }
+  
        key='d';
-            c++;
-            if(c%5==0){c=0;}
+           
   
 }
-//here add }
+//
  }
+ 
+ */
 //======
-  if(shooting[c]){
-     shootingSpeed++;
-     shX=ftX;
-     shY=ftY+10;
-     image(shoot[c],shX-shootingSpeed,shY);
+// if(keyPressed){
+//GOOD
+/*
+if(key==' ') {
+    if (shooting[c]==false) {
+      shooting[c]=true;
+      bullet[c][0]=ftX;
+      bullet[c][1]=ftY;
+      c++ ;
+      c = c%5 ;
+      key = 'd' ;
+    }
+  }
+
+for(int d=0;d<5;d++){
+  
+  if(shooting[d]){
+     bullet[d][0]-=5;
+     shX= bullet[d][0];
+     shY= bullet[d][1];
+     image(shoot[d],shX,shY);
    //    image(shoot[c],shX-shootingSpeed,shY-80);
-   }
+  
+         //   if(c%5==0){c=0;}  
+  }
+    if(shX<=-30){
+      shooting[d]=false;
+  }
+
+}
+*/
+//GOOD
+
+if(key==' '){
+  if(shooting[c]==false){
+shooting[c]=true;
+ bullet[c][0]=ftX;
+      bullet[c][1]=ftY;
+
+c++;
+c=c%5;
+key='d';}
+
+}
+for(int c=0;c<5;c++){
+  if(shooting[c]){
+   //  shootingSpeed++;
+    bullet[c][0]-=5;
+     
+     shX= bullet[c][0];
+     shY= bullet[c][1];
+     image(shoot[c],shX,shY+10);
+   //    image(shoot[c],shX-shootingSpeed,shY-80);
+         //   if(c%5==0){c=0;}  
+ }
     if(shX-shootingSpeed<=-30){
     shooting[c]=false;
-    shootingSpeed=0;}
+    //shootingSpeed=0;
+  }
+}
 
+//}
 //======
  
 //end of shoot
@@ -360,6 +410,7 @@ void keyPressed(){
     case RIGHT:
     rightPressed = true;
     break;
+    
   }
   }
   //shoot
