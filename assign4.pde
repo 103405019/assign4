@@ -270,8 +270,10 @@ int i=(currentFrame++)/6%5;
      shX=ftX;
      shY=ftY+10;
      image(shoot[c],shX-shootingSpeed,shY);
-     //if(shX-shootingSpeed<=-30){}
    }
+    if(shX-shootingSpeed<=-30){
+    shooting=false;
+    shootingSpeed=0;}
   }
 
     
@@ -319,18 +321,16 @@ void keyPressed(){
     rightPressed = true;
     break;
   }
- // if(keyCode==ENTER){
-//shooting=true;
-//}
+
   }
   //shoot
   for(int c=0; c<5; c++){
         if(key==' '){
      shooting=true;
-  println(c);}
+}
   }
     }
- // }
+
    
 
 void keyReleased(){
