@@ -3,7 +3,7 @@ int bg, enX, enY, hps, trX, trY, ftX, ftY,  timer, timerExplode;
 float speed, shootingSpeed;
 float shX, shY;
 boolean straightMode=true, tiltMode=false, squareMode=false;
-boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false; //shooting=false;
+boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false; 
 final int START=0, PLAYING=1, END=2;
 int gameState, currentFrame;
 boolean[]showing = new boolean[8];
@@ -86,98 +86,27 @@ void draw() {
     if(enY+30<ftY+25){enY+=(speed-2);}
     else if(enY+30==ftY+25){enY=ftY;}} */
   
-//shoot
-/*
-    while (key==' ') {
-    
-    if(key==' '){
+ //shoot
+  if(key==' '){
+    if(shooting[c]==false){
+     shooting[c]=true;
      bullet[c][0]=ftX;
      bullet[c][1]=ftY;
-      shooting[c]=true;
-     
-     shootingSpeed++;
-     shX=ftX;
-     shY=ftY;
-   //  image(shoot[c],shX-shootingSpeed,shY);     
-     shootingSpeed=0;
-
-println(c);
-  
-       key='d';
-           
-  
-}
-//
- }
- 
- */
-//======
-// if(keyPressed){
-//GOOD
-/*
-if(key==' ') {
-    if (shooting[c]==false) {
-      shooting[c]=true;
-      bullet[c][0]=ftX;
-      bullet[c][1]=ftY;
-      c++ ;
-      c = c%5 ;
-      key = 'd' ;
-    }
+     c++; c=c%5;
+     key='d';}
   }
-
-for(int d=0;d<5;d++){
-  
-  if(shooting[d]){
-     bullet[d][0]-=5;
-     shX= bullet[d][0];
-     shY= bullet[d][1];
-     image(shoot[d],shX,shY);
-   //    image(shoot[c],shX-shootingSpeed,shY-80);
-  
-         //   if(c%5==0){c=0;}  
-  }
-    if(shX<=-30){
-      shooting[d]=false;
-  }
-
-}
-*/
-//GOOD
-
-if(key==' '){
-  if(shooting[c]==false){
-shooting[c]=true;
- bullet[c][0]=ftX;
-      bullet[c][1]=ftY;
-
-c++;
-c=c%5;
-key='d';}
-
-}
-for(int c=0;c<5;c++){
-  if(shooting[c]){
-   //  shootingSpeed++;
-    bullet[c][0]-=5;
-     
-     shX= bullet[c][0];
-     shY= bullet[c][1];
-     image(shoot[c],shX,shY+10);
-   //    image(shoot[c],shX-shootingSpeed,shY-80);
-         //   if(c%5==0){c=0;}  
- }
-    if(shX-shootingSpeed<=-30){
+  for(int c=0;c<5;c++){
+   if(shooting[c]){
+    bullet[c][0]-=5;  
+    shX= bullet[c][0];
+    shY= bullet[c][1];
+    image(shoot[c],shX,shY+10);
+   }
+   if(shX-shootingSpeed<=-30){
     shooting[c]=false;
-    //shootingSpeed=0;
+   }
   }
-}
 
-//}
-//======
- 
-//end of shoot
-   
 //enemies
    
    timer+=3;
@@ -203,15 +132,9 @@ for(int c=0;c<5;c++){
     for(int n=0; n<5; n++){
     showing[n]=true;}
    }
-   //shoot
-    
-//key='d';  
-    
-   
-   //shoot
-   
-   
+
 int i=(currentFrame++)/6%5;
+
    //straight
    if(straightMode){
     for(int n=0; n<5; n++){
@@ -227,9 +150,16 @@ int i=(currentFrame++)/6%5;
         hps-=2*199/10;
         }
         }
+      if(enY+60>=shY && shY>=enY-50){
+      if(enX+X[n]-50<=shX && shX<=enX+X[n]+60){
+        showing[n]=false;
+        explode[n]=true;
+        currentFrame=0;
+        }
+        }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
-//explode
+    //explode
     if(explode[n]){
        image(flames[i], enX+X[n], enY);       
        if(frameCount%(60/10)==0){
@@ -238,6 +168,7 @@ int i=(currentFrame++)/6%5;
    if(timerExplode==4){explode[n]=false;timerExplode=0;}
     }
   }
+   
    
    //tilt
    if(tiltMode){
@@ -266,6 +197,7 @@ int i=(currentFrame++)/6%5;
    }
    }
      
+     
    //square
    if(squareMode){
     for(int n=0; n<3; n++){
@@ -282,7 +214,7 @@ int i=(currentFrame++)/6%5;
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-30, enY+X[n]+170);}
-       //explode
+    //explode
     if(explode[n]){
        image(flames[i], enX+X[n]-30, enY+X[n]+170);       
        if(frameCount%(60/10)==0){
@@ -305,7 +237,7 @@ int i=(currentFrame++)/6%5;
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-120-30, enY+X[n]+290);}
-            //explode
+    //explode
     if(explode[n]){
        image(flames[i], enX+X[n]-120-30, enY+X[n]+290);       
        if(frameCount%(60/10)==0){
@@ -328,7 +260,7 @@ int i=(currentFrame++)/6%5;
         }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-60-30, enY+X[n]+230);}
-            //explode
+    //explode
     if(explode[n]){
        image(flames[i], enX+X[n]-60-30, enY+X[n]+230);       
        if(frameCount%(60/10)==0){
@@ -360,13 +292,6 @@ int i=(currentFrame++)/6%5;
     if(leftPressed){ftX-=speed;}
     if(rightPressed){ftX+=speed;}
     
-   //shoot
-   
-//    for(int c=0; c<5; c++){
- 
-  //}
-    
-    
   //boundary
     if(ftX>width-50){ftX=width-50;}
     if(ftX<0){ftX=0;}
@@ -385,7 +310,6 @@ int i=(currentFrame++)/6%5;
     }
  break;
  
- 
  case END:
   image(end2,0,0);
   if(mouseX<=450 && mouseX>=200 && mouseY<=350 && mouseY>=320){
@@ -395,6 +319,7 @@ int i=(currentFrame++)/6%5;
  }
 }
 }
+
 void keyPressed(){
   if(key==CODED){
     switch(keyCode){
@@ -409,13 +334,9 @@ void keyPressed(){
     break;
     case RIGHT:
     rightPressed = true;
-    break;
-    
+    break;  
   }
   }
-  //shoot
-  
-    
   }
    
 void keyReleased(){
