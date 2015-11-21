@@ -102,8 +102,9 @@ void draw() {
     shY= bullet[c][1];
     image(shoot[c],shX,shY+10);
    }
-   if(shX-shootingSpeed<=-30){
+   if(shX-shootingSpeed<=0){
     shooting[c]=false;
+    shX=2000;
    }
   }
 
@@ -150,13 +151,18 @@ int i=(currentFrame++)/6%5;
         hps-=2*199/10;
         }
         }
-      if(enY+60>=shY && shY>=enY-50){
-      if(enX+X[n]-50<=shX && shX<=enX+X[n]+60){
+     for(int c=0; c<5; c++){
+     if(shooting[c]==true){
+      if(enY+60>=shY && shY>=enY-30){
+      if(enX+X[n]-30<=shX && shX<=enX+X[n]+60){
         showing[n]=false;
+        shooting[c]=false;shX=2000;
         explode[n]=true;
         currentFrame=0;
         }
         }
+        }
+     }
      }
       if(showing[n]==true){image(enemy, enX+X[n], enY);}
     //explode
@@ -184,7 +190,16 @@ int i=(currentFrame++)/6%5;
         currentFrame=0;
         hps-=2*199/10;
         }
-        }  
+        }
+      if(enY+340+60>=shY && shY>=enY+X[n]+340-30){
+      if(enX+X[n]-30<=shX && shX<=enX+X[n]+60){
+        showing[n]=false;
+        for(int c=0; c<5; c++){
+        shooting[c]=false;shX=2000;}
+        explode[n]=true;
+        currentFrame=0;
+        }
+        }
      }
   if(showing[n]==true){image(enemy, enX+X[n], enY+X[n]+340);}
   //explode
@@ -212,6 +227,18 @@ int i=(currentFrame++)/6%5;
         hps-=2*199/10;
         }
         }
+     for(int c=0; c<5; c++){
+     if(shooting[c]==true){
+      if(enY+X[n]+170+60>=shY && shY>=enY+X[n]+170-30){
+      if(enX+X[n]-30-30<=shX && shX<=enX+X[n]-30+60){
+        showing[n]=false;
+        shooting[c]=false;shX=2000;
+        explode[n]=true;
+        currentFrame=0;
+        }
+        }
+        }
+     }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-30, enY+X[n]+170);}
     //explode
@@ -235,6 +262,18 @@ int i=(currentFrame++)/6%5;
         hps-=2*199/10;
         }
         }
+     for(int c=0; c<5; c++){
+     if(shooting[c]==true){
+      if(enY+X[n]+290+60>=shY && shY>=enY+X[n]+290-30){
+      if(enX+X[n]-120-30-30<=shX && shX<=enX+X[n]-120-30+60){
+        showing[n]=false;
+        shooting[c]=false;shX=2000;
+        explode[n]=true;
+        currentFrame=0;
+        }
+        }
+        }
+     }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-120-30, enY+X[n]+290);}
     //explode
@@ -258,6 +297,18 @@ int i=(currentFrame++)/6%5;
         hps-=2*199/10;
         }
         }
+     for(int c=0; c<5; c++){
+     if(shooting[c]==true){
+      if(enY+X[n]+230+60>=shY && shY>=enY+X[n]+230-30){
+      if(enX+X[n]-60-30-30<=shX && shX<=enX+X[n]-60-30+60){
+        showing[n]=false;
+        shooting[c]=false;shX=2000;
+        explode[n]=true;
+        currentFrame=0;
+        }
+        }
+        }
+     }
      }
      if(showing[n]==true){image(enemy, enX+X[n]-60-30, enY+X[n]+230);}
     //explode
