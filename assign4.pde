@@ -357,7 +357,7 @@ int i=(currentFrame++)/6%5;
    image(hp, 15, 15);
    if(hps<=0){
     hps=0;
-    //gameState=END;
+    gameState=END;
     }
  break;
  
