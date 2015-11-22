@@ -92,13 +92,12 @@ void draw() {
     else if(enY+30==ftY+25){enY=ftY;}} */
   
  //shoot
- // if
   for(int c=0;c<5;c++){
    if(shooting[c]){
     bullet[c][0]-=5;  
     shX= bullet[c][0];
-    shY= bullet[c][1];
-    image(shoot[c],shX,shY+10);
+    shY= bullet[c][1]+10;
+    image(shoot[c],shX,shY);
    }
    if(shX-shootingSpeed<=0){
     shooting[c]=false;
