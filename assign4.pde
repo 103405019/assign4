@@ -134,7 +134,7 @@ void draw() {
     showing[n]=true;}
    }
 
-int i=(currentFrame++)/6%5;
+ int i=floor((currentFrame++)/6%5);
 
    //straight
    if(straightMode){
