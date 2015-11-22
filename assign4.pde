@@ -87,14 +87,7 @@ void draw() {
     else if(enY+30==ftY+25){enY=ftY;}} */
   
  //shoot
-  if(key==' '){
-    if(shooting[c]==false){
-     shooting[c]=true;
-     bullet[c][0]=ftX;
-     bullet[c][1]=ftY;
-     c++; c=c%5;
-     key='d';}
-  }
+ // if
   for(int c=0;c<5;c++){
    if(shooting[c]){
     bullet[c][0]-=5;  
@@ -134,7 +127,7 @@ void draw() {
     showing[n]=true;}
    }
 
- int i=floor((currentFrame++)/6%5);
+int i=floor((currentFrame++)/6%5);
 
    //straight
    if(straightMode){
@@ -357,7 +350,7 @@ void draw() {
    image(hp, 15, 15);
    if(hps<=0){
     hps=0;
-    gameState=END;
+    //gameState=END;
     }
  break;
  
@@ -387,6 +380,14 @@ void keyPressed(){
     rightPressed = true;
     break;  
   }
+  }
+  if(key==' '){
+    if(shooting[c]==false){
+     shooting[c]=true;
+     bullet[c][0]=ftX;
+     bullet[c][1]=ftY;
+     c++; c=c%5;
+     key='d';}
   }
   }
    
