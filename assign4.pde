@@ -42,6 +42,8 @@ void draw() {
    if(mousePressed){gameState=PLAYING;}
    else{image(start1,0,0);}}
   //restart
+  timer=0;
+   straightMode=true;
    ftX=580;
    ftY=260;
    trX=floor(random(0,600));
@@ -49,6 +51,9 @@ void draw() {
    enY=floor(random(45,430));
    enX=0;
    hps=199*2/10;
+   for(int n=0; n<5; n++){
+   explode[n]=false;
+   showing[n] = true;}
   break;
  
   case PLAYING:
@@ -350,7 +355,8 @@ int i=floor((currentFrame++)/6%5);
    image(hp, 15, 15);
    if(hps<=0){
     hps=0;
-    //gameState=END;
+    gameState=END;
+
     }
  break;
  
@@ -359,6 +365,9 @@ int i=floor((currentFrame++)/6%5);
   if(mouseX<=450 && mouseX>=200 && mouseY<=350 && mouseY>=320){
    if(mousePressed){gameState=START;}
    else{image(end1,0,0);}
+   straightMode=false;
+   tiltMode=false;
+   squareMode=false;
  break;
  }
 }
