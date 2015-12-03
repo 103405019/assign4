@@ -1,9 +1,10 @@
 PImage bg1, bg2, enemy, fighter, hp, treasure, start1, start2, end1, end2;
 int bg, enX, enY, hps, trX, trY, ftX, ftY,  timer, timerExplode;
-float speed, shootingSpeed;
-float shX, shY;
+int speed, shootingSpeed, enemySpeed, enemyStart;
+int shX, shY;
 boolean straightMode=true, tiltMode=false, squareMode=false;
 boolean upPressed=false, downPressed=false, leftPressed=false, rightPressed=false; 
+boolean EnemyFighterHit, FighterTreasureHit, EnemyBulletHit;
 final int START=0, PLAYING=1, END=2;
 int gameState, currentFrame;
 boolean[]showing = new boolean[8];
@@ -11,10 +12,24 @@ PImage[]flames = new PImage[5];
 PImage[]shoot = new PImage[5];
 boolean[]explode = new boolean[8];
 boolean[]shooting = new boolean[5];
-float bullet[][] = new float[5][2];
-int c=0;
+int bullet[][] = new int[5][2];
+int enemyXY[][] = new int[8][2];
+int c=0, n=0;
+int score=0;
+PFont f;
+
+boolean isHit(int aX, int aY, int aW, int aH, int bX,int bY, int bW, int bH)
+{
+  if(aY+aH>=bY && bY>=aY-bH){
+  if(aX-bW<=bX && bX<=aX+aW){
+      return true;}
+    else{return false;}
+  }
+    else{return false;}
+  }
+
 void setup () {
-  size(640, 480) ;
+  size(1200, 480) ;
   start1=loadImage("img/start1.png");
   start2=loadImage("img/start2.png");
   bg1=loadImage("img/bg1.png");
@@ -25,6 +40,7 @@ void setup () {
   treasure=loadImage("img/treasure.png");
   end1=loadImage("img/end1.png");
   end2=loadImage("img/end2.png");
+  f=createFont("Agency FB",24);
   
   bg=0;
   speed=0;
@@ -48,12 +64,14 @@ void draw() {
    ftY=260;
    trX=floor(random(0,600));
    trY=floor(random(45,430));
-   enY=floor(random(45,430));
-   enX=0;
+   enemyStart=floor(random(45,430));
+   enemySpeed=0;
    hps=199*2/10;
+   score=0;
    for(int n=0; n<5; n++){
    explode[n]=false;
-   showing[n] = true;}
+   showing[n] = true;
+   shooting[n]=false;}
   break;
  
   case PLAYING:
@@ -63,20 +81,22 @@ void draw() {
    image(bg1,bg,0);
    image(bg2,bg-641,0);
    image(bg1,bg-1282,0);
+   
   //treasure
    image(treasure, trX, trY);
-   if(trY+50>=ftY && ftY>=trY-50){
-    if(trX-50<=ftX && ftX<=trX+50){
+   FighterTreasureHit=isHit(ftX, ftY, 50, 50, trX, trY, 50, 50);
+   if(FighterTreasureHit==true){
      image(treasure, trX, trY);
      trY=floor(random(45,430));
      trX=floor(random(0,600));
      hps+=199/10;
      if(hps>=199){
-     hps=199;}}}
+     hps=199;}}
+     scoreChange(score);
      
   //enemy
    //move 
-   enX+=3;
+   enemySpeed+=3;
    /*if(upPressed){
     if(enY+30>ftY+25){enY-=(speed-2);}
     if(enY+30<ftY+25){enY+=(speed-2);}
@@ -96,7 +116,7 @@ void draw() {
    if(shooting[c]){
     bullet[c][0]-=5;  
     shX= bullet[c][0];
-    shY= bullet[c][1]+10;
+    shY= bullet[c][1];
     image(shoot[c],shX,shY);
    }
    if(shX-shootingSpeed<=0){
@@ -109,21 +129,24 @@ void draw() {
    
    timer+=3;
    if(timer==981){
-    enX=0;enY=floor(random(0,130));
+    enemySpeed=0;
+    enemyStart=floor(random(0,130));
     straightMode=false;
     tiltMode=true;
     for(int n=0; n<5; n++){
     showing[n]=true;}
    }
    if(timer==1962){
-    enX=0;enY=floor(random(0,180));
+    enemySpeed=0;
+    enemyStart=floor(random(0,180));
     tiltMode=false;
     squareMode=true;
     for(int n=0; n<8; n++){
     showing[n]=true;}
    }
    if(timer==2901){
-    enX=0;enY=floor(random(0,420));
+    enemySpeed=0;
+    enemyStart=floor(random(0,420));
     squareMode=false;
     straightMode=true;
     timer=0;
@@ -136,35 +159,35 @@ int i=floor((currentFrame++)/6%5);
    //straight
    if(straightMode){
     for(int n=0; n<5; n++){
-     int[]X = new int[5];
-     X[n]=(n*70-340);
-    //crash
-     if(showing[n]){
-      if(enY+60>=ftY && ftY>=enY-50){
-      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+   if(showing[n]){
+    enemyXY[n][0]=enemySpeed+n*70-340;
+    enemyXY[n][1]=enemyStart;
+    enX= enemyXY[n][0];
+    enY= enemyXY[n][1];
+    image(enemy,enX,enY);
+   }
+   if(showing[n]){
+   EnemyFighterHit=isHit(enX, enY, 60, 60, ftX, ftY, 50, 50);
+   if(EnemyFighterHit==true){
         showing[n]=false;
         explode[n]=true;
         currentFrame=0;
-        hps-=2*199/10;
-        }
-        }
-     for(int c=0; c<5; c++){
-     if(shooting[c]==true){
-      if(enY+60>=shY && shY>=enY-30){
-      if(enX+X[n]-30<=shX && shX<=enX+X[n]+60){
+        hps-=2*199/10;}
+   for(int c=0; c<5; c++){
+   if(shooting[c]==true){
+   EnemyBulletHit=isHit(enX, enY, 60, 60, shX, shY, 30, 30);
+   if(EnemyBulletHit==true){
         showing[n]=false;
         shooting[c]=false;shX=2000;
         explode[n]=true;
-        currentFrame=0;
-        }
-        }
-        }
-     }
-     }
-      if(showing[n]==true){image(enemy, enX+X[n], enY);}
+        score++;
+        currentFrame=0;}
+   }
+   }
+   }
     //explode
     if(explode[n]){
-       image(flames[i], enX+X[n], enY);       
+       image(flames[i], enemyXY[n][0], enemyXY[n][1]);       
        if(frameCount%(60/10)==0){
        timerExplode++;}
    }
@@ -176,32 +199,35 @@ int i=floor((currentFrame++)/6%5);
    //tilt
    if(tiltMode){
     for(int n=0; n<5; n++){
-     int[]X = new int[5];
-     X[n]=n*70-340;
-    //crash
-     if(showing[n]){
-      if(enY+X[n]+340+60>=ftY && ftY>=enY+X[n]+340-50){
-      if(enX+X[n]-50<=ftX && ftX<=enX+X[n]+60){
+   if(showing[n]){
+    enemyXY[n][0]=enemySpeed+n*70-340;
+    enemyXY[n][1]=enemyStart+n*70;
+    enX= enemyXY[n][0];
+    enY= enemyXY[n][1];
+    image(enemy,enX,enY);
+   }
+   if(showing[n]){
+   EnemyFighterHit=isHit(enX, enY, 60, 60, ftX, ftY, 50, 50);
+   if(EnemyFighterHit==true){
         showing[n]=false;
         explode[n]=true;
         currentFrame=0;
-        hps-=2*199/10;
-        }
-        }
-      if(enY+340+60>=shY && shY>=enY+X[n]+340-30){
-      if(enX+X[n]-30<=shX && shX<=enX+X[n]+60){
+        hps-=2*199/10;}
+   for(int c=0; c<5; c++){
+   if(shooting[c]==true){
+   EnemyBulletHit=isHit(enX, enY, 60, 60, shX, shY, 30, 30);
+   if(EnemyBulletHit==true){
         showing[n]=false;
-        for(int c=0; c<5; c++){
-        shooting[c]=false;shX=2000;}
+        shooting[c]=false;shX=2000;
         explode[n]=true;
-        currentFrame=0;
-        }
-        }
-     }
-  if(showing[n]==true){image(enemy, enX+X[n], enY+X[n]+340);}
+        score++;
+        currentFrame=0;}
+   }
+   }
+   }  
   //explode
     if(explode[n]){
-       image(flames[i], enX+X[n], enY+X[n]+340);       
+       image(flames[i], enemyXY[n][0], enemyXY[n][1]);       
        if(frameCount%(60/10)==0){
        timerExplode++;}
    }
@@ -213,34 +239,35 @@ int i=floor((currentFrame++)/6%5);
    //square
    if(squareMode){
     for(int n=0; n<3; n++){
-     int[]X = new int[8];
-     X[n]=n*60-170;
-     if(showing[n]){
-      if(enY+X[n]+170+60>=ftY && ftY>=enY+X[n]+170-50){
-      if(enX+X[n]-30-50<=ftX && ftX<=enX+X[n]-30+60){
+   if(showing[n]){
+    enemyXY[n][0]=enemySpeed+n*60-200;
+    enemyXY[n][1]=enemyStart+n*60;
+    enX= enemyXY[n][0];
+    enY= enemyXY[n][1];
+    image(enemy,enX,enY);
+   }
+   if(showing[n]){
+   EnemyFighterHit=isHit(enX, enY, 60, 60, ftX, ftY, 50, 50);
+   if(EnemyFighterHit==true){
         showing[n]=false;
         explode[n]=true;
         currentFrame=0;
-        hps-=2*199/10;
-        }
-        }
-     for(int c=0; c<5; c++){
-     if(shooting[c]==true){
-      if(enY+X[n]+170+60>=shY && shY>=enY+X[n]+170-30){
-      if(enX+X[n]-30-30<=shX && shX<=enX+X[n]-30+60){
+        hps-=2*199/10;}
+   for(int c=0; c<5; c++){
+   if(shooting[c]==true){
+   EnemyBulletHit=isHit(enX, enY, 60, 60, shX, shY, 30, 30);
+   if(EnemyBulletHit==true){
         showing[n]=false;
         shooting[c]=false;shX=2000;
         explode[n]=true;
-        currentFrame=0;
-        }
-        }
-        }
-     }
-     }
-     if(showing[n]==true){image(enemy, enX+X[n]-30, enY+X[n]+170);}
-    //explode
+        score++;
+        currentFrame=0;}
+   }
+   }
+   }  
+  //explode
     if(explode[n]){
-       image(flames[i], enX+X[n]-30, enY+X[n]+170);       
+       image(flames[i], enemyXY[n][0], enemyXY[n][1]);       
        if(frameCount%(60/10)==0){
        timerExplode++;}
    }
@@ -248,69 +275,71 @@ int i=floor((currentFrame++)/6%5);
    }
    
     for(int n=3; n<6; n++){
-     int[]X = new int[8];
-     X[n]=(n-3)*60-170;
-     if(showing[n]){
-      if(enY+X[n]+290+60>=ftY && ftY>=enY+X[n]+290-50){
-      if(enX+X[n]-120-30-50<=ftX && ftX<=enX+X[n]-120-30+60){
+   if(showing[n]){
+    enemyXY[n][0]=enemySpeed+(n-3)*60-320;
+    enemyXY[n][1]=enemyStart+(n-3)*60+120;
+    enX= enemyXY[n][0];
+    enY= enemyXY[n][1];
+    image(enemy,enX,enY);
+   }
+   if(showing[n]){
+   EnemyFighterHit=isHit(enX, enY, 60, 60, ftX, ftY, 50, 50);
+   if(EnemyFighterHit==true){
         showing[n]=false;
         explode[n]=true;
         currentFrame=0;
-        hps-=2*199/10;
-        }
-        }
-     for(int c=0; c<5; c++){
-     if(shooting[c]==true){
-      if(enY+X[n]+290+60>=shY && shY>=enY+X[n]+290-30){
-      if(enX+X[n]-120-30-30<=shX && shX<=enX+X[n]-120-30+60){
+        hps-=2*199/10;}
+   for(int c=0; c<5; c++){
+   if(shooting[c]==true){
+   EnemyBulletHit=isHit(enX, enY, 60, 60, shX, shY, 30, 30);
+   if(EnemyBulletHit==true){
         showing[n]=false;
         shooting[c]=false;shX=2000;
         explode[n]=true;
-        currentFrame=0;
-        }
-        }
-        }
-     }
-     }
-     if(showing[n]==true){image(enemy, enX+X[n]-120-30, enY+X[n]+290);}
-    //explode
+        score++;
+        currentFrame=0;}
+   }
+   }
+   }  
+  //explode
     if(explode[n]){
-       image(flames[i], enX+X[n]-120-30, enY+X[n]+290);       
+       image(flames[i], enemyXY[n][0], enemyXY[n][1]);       
        if(frameCount%(60/10)==0){
        timerExplode++;}
    }
    if(timerExplode==4){explode[n]=false;timerExplode=0;}
-   }   
+   } 
    
     for(int n=6; n<8; n++){
-     int[]X = new int[8];
-     X[n]=(n-6)*120-170;
-     if(showing[n]){
-      if(enY+X[n]+230+60>=ftY && ftY>=enY+X[n]+230-50){
-      if(enX+X[n]-60-30-50<=ftX && ftX<=enX+X[n]-60-30+60){
+   if(showing[n]){
+    enemyXY[n][0]=enemySpeed+(n-6)*120-260;
+    enemyXY[n][1]=enemyStart+(n-6)*120+60;
+    enX= enemyXY[n][0];
+    enY= enemyXY[n][1];
+    image(enemy,enX,enY);
+   }
+   if(showing[n]){
+   EnemyFighterHit=isHit(enX, enY, 60, 60, ftX, ftY, 50, 50);
+   if(EnemyFighterHit==true){
         showing[n]=false;
         explode[n]=true;
         currentFrame=0;
-        hps-=2*199/10;
-        }
-        }
-     for(int c=0; c<5; c++){
-     if(shooting[c]==true){
-      if(enY+X[n]+230+60>=shY && shY>=enY+X[n]+230-30){
-      if(enX+X[n]-60-30-30<=shX && shX<=enX+X[n]-60-30+60){
+        hps-=2*199/10;}
+   for(int c=0; c<5; c++){
+   if(shooting[c]==true){
+   EnemyBulletHit=isHit(enX, enY, 60, 60, shX, shY, 30, 30);
+   if(EnemyBulletHit==true){
         showing[n]=false;
         shooting[c]=false;shX=2000;
         explode[n]=true;
-        currentFrame=0;
-        }
-        }
-        }
-     }
-     }
-     if(showing[n]==true){image(enemy, enX+X[n]-60-30, enY+X[n]+230);}
-    //explode
+        score++;
+        currentFrame=0;}
+   }
+   }
+   }  
+  //explode
     if(explode[n]){
-       image(flames[i], enX+X[n]-60-30, enY+X[n]+230);       
+       image(flames[i], enemyXY[n][0], enemyXY[n][1]);       
        if(frameCount%(60/10)==0){
        timerExplode++;}
    }
@@ -354,9 +383,10 @@ int i=floor((currentFrame++)/6%5);
    image(hp, 15, 15);
    if(hps<=0){
     hps=0;
-    gameState=END;
-
+  //  gameState=END;
     }
+    
+
  break;
  
  case END:
@@ -393,7 +423,7 @@ void keyPressed(){
     if(shooting[c]==false){
      shooting[c]=true;
      bullet[c][0]=ftX;
-     bullet[c][1]=ftY;
+     bullet[c][1]=ftY+10;
      c++; c=c%5;
      key='d';}
   }
@@ -416,4 +446,11 @@ void keyReleased(){
     break; 
   }
   }
+}
+
+void scoreChange(int score){
+textFont(f,30);
+//textAlign(CORNER)
+fill(255);
+text("score: "+score*20,10, 465);
 }
